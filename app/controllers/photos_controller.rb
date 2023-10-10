@@ -37,23 +37,37 @@ class PhotosController < ApplicationController
 
   # PATCH/PUT /photos/1 or /photos/1.json
   def update
-    respond_to do |format|
-      if @photo.update(photo_params)
-        format.html { redirect_to @photo, notice: "Photo was successfully updated." }
-        format.json { render :show, status: :ok, location: @photo }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @photo.errors, status: :unprocessable_entity }
+    if @photo.owner == current_user
+      respond_to do |format|
+        if @photo.update(photo_params)
+          format.html { redirect_to @photo, notice: "Photo was successfully updated." }
+          format.json { render :show, status: :ok, location: @photo }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @photo.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_url, alert: "You can't edit this photo." }
+        format.json { head :no_content }
       end
     end
   end
 
   # DELETE /photos/1 or /photos/1.json
   def destroy
-    @photo.destroy
-    respond_to do |format|
-      format.html { redirect_back fallback_location: root_url, notice: "Photo was successfully destroyed." }
-      format.json { head :no_content }
+    if @photo.owner == current_user
+      @photo.destroy
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_url, notice: "Photo was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_url, alert: "You can't delete this photo." }
+        format.json { head :no_content }
+      end
     end
   end
 
