@@ -1,6 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  config.hosts << /.*\.app\.github\.dev/
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # Allow better_errors to work in online IDE
   config.web_console.whitelisted_ips = "0.0.0.0/0.0.0.0"
