@@ -11,6 +11,10 @@ class UsersController < ApplicationController
     @posts = @user.discover
   end
 
+  def show
+    authorize @user
+  end
+
   private
 
     def set_user
