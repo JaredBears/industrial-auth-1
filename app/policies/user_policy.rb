@@ -19,5 +19,9 @@ class UserPolicy
   def discover?
     user == current_user
   end
+
+  def liked?
+    show?
+  end
   
 end
